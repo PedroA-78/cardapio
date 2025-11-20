@@ -37,7 +37,7 @@ body {
     padding: 0 1.5rem;
     box-sizing: border-box;
 
-    background: url('/assets/hero-restaurant.jpg');
+    background: url('../assets/hero-restaurant.jpg');
     background-position: center;
     background-size: cover;
 }
