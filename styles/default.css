@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+    --font: 'Inter', sans-serif;
+    --background: rgb(250, 250, 250);
+    --text-white: rgb(255, 255, 255);
+    --card: 255, 255, 255;
+    --border: #e6e6e6;
+    --title-color: #262626;
+    --text-color: #737373;
+    --price-color: 46, 184, 46;
+    --primary-color: 255, 91, 20;
+    --shadow: 0 4px 16px rgba(0, 0, 0, .1);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--background);
+}
+
+/* HEADER */
+
+.heading {
+    width: 100%;
+    height: 20rem;
+    position: relative;
+}
+
+.heading_background {
+    width: 100%;
+    height: 100%;    
+    position: absolute;
+    inset: 0;
+    background-position: center;
+    background-size: cover;
+}
+
+.heading_description {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0 1.5rem;
+    color: var(--text-white);
+    background-color: rgba(0, 0, 0, .4);
+    z-index: 10;
+}
+
+.heading_logo {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.heading_name {
+    margin: 0 0 .5rem;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+}
+
+.heading_text {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.25rem;
+}
+
+/* RESTAURANT ITEM CARDS */
+
+.restaurant_items {
+    padding: 1rem;
+}
+
+.item {
+    width: 100%;
+    margin-top: .75rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    align-items: center;
+    gap: 0 1rem;
+    background-color: rgb(var(--card));
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: ease-in-out 150ms;
+}
+
+.item:first-child {
+    margin: 0;
+}
+
+.item:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
+}
+
+.item_title {
+    margin: 0 0 .25rem;
+    font-size: 1rem;
+    line-height: 1.4rem;
+    font-weight: 600;
+    color: var(--title-color);
+}
+
+.item_text {
+    margin: 0 0 .75rem;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    color: var(--text-color);
+}
+
+.item_price {
+    margin: 0;
+    font-size: .75rem;
+    line-height: 1rem;
+    color: var(--text-color);
+}
+
+.item_price_highlight {
+    display: inline-block;
+    margin-left: .25rem;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    color: rgb(var(--price-color));
+}
+
+.item_preview {
+    grid-column: 2 / 3;
+    grid-row: 1 / 4;
+    width: 6rem;
+    height: 6rem;
+    display: inline-block;
+    border-radius: .75rem;
+    object-fit: cover;
+}
