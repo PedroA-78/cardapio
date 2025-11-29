@@ -110,6 +110,19 @@ const app = Vue.createApp({
                 }
             ],
             selectedItem: null,
+            openCart: null,
+            cart: []
+        }
+    },
+    computed: {
+        isCartEmpty() {
+            return this.cart.length === 0
+        },
+        cartCount() {
+            return this.cart.reduce((acc, item) => acc + item.quantity, 0)
+        },
+        cartTotal() {
+            return this.cart.reduce((t, item) => t + item.price * item.quantity, 0)
         }
     },
     methods: {
@@ -118,7 +131,42 @@ const app = Vue.createApp({
         },
         closeModal() {
             this.selectedItem = null
+        },
+        cartOpen() {
+            this.openCart = true
+        },
+        cartClose() {
+            this.openCart = null
+        },
+        addToCart(item) {
+            const existing = this.cart.find(i => i.id === item.id)
+
+            if (existing) {
+                existing.quantity += item.quantity
+            } else {
+                this.cart.push({
+                    ...item,
+                    total: item.price * item.quantity
+                })
+            }
+        },
+        removeItem(i) {
+            this.cart.splice(i, 1)
+        },
+        addToItem(item) {
+            item.quantity++
+            this.updateItemTotal(item)
+        },
+        removeToItem(item) {
+            if (item.quantity > 1) {
+                item.quantity--
+                this.updateItemTotal(item)
+            }
+        },
+        updateItemTotal(item) {
+            item.total = item.price * item.quantity
         }
+
     }
 })
 

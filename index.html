@@ -29,49 +29,107 @@
             </div>
         </main>
 
+        <div class="cart_open" @click="cartOpen()" v-if="!openCart">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart_icon"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            <span class="cart_quantity" v-if="cartCount > 0">{{ cartCount }}</span>
+        </div>
 
-
-        <div class="modal" v-if="selectedItem">
-            <div class="modal_overlay"></div>
-            <div class="modal_content">
-                <div class="modal_hero">
-                    <img :src="selectedItem.preview" alt="Imagem do prato" class="modal_hero_background">
-                    <div class="modal_actions">
-                        <button class="modal_close" @click="closeModal">Fechar</button>
+        <div class="modals">
+            <div class="modal" v-if="selectedItem">
+                <div class="modal_content">
+                    <div class="modal_hero">
+                        <img :src="selectedItem.preview" alt="Imagem do prato" class="modal_hero_background">
+                        <div class="modal_actions">
+                            <button class="modal_close" @click="closeModal">Fechar</button>
+                        </div>
+                    </div>
+                    <div class="modal_body">
+                        <div class="modal_item">
+                            <h3 class="modal_item_title">{{ selectedItem.title }}</h3>
+                            <p class="modal_item_text">{{ selectedItem.text }}</p>
+                            <div class="modal_separator"></div>
+                            <div class="modal_item_cart">
+                                <p class="modal_item_price">R${{ selectedItem.price.toFixed(2) }}</p>
+                                <div class="item_quantity">
+                                    <span class="item_quantity_minus" @click="selectedItem.quantity > 1 ? selectedItem.quantity-- : null">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item_quantity_minus_icon"><path d="M5 12h14"/></svg>
+                                    </span>
+                                    <span class="item_quantity_amount">{{ selectedItem.quantity }}</span>
+                                    <span class="item_quantity_more" @click="selectedItem.quantity++">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item_quantity_more_icon"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                                    </span>
+                                </div>
+                                <button class="item_add_cart" @click="addToCart(selectedItem)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item_add_cart_icon"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                                    Adicionar ao carrinho
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal_information">
+                            <h4 class="modal_additionals_title">Adicionais</h4>
+                            <div class="modal_additionals">
+                                <div class="modal_additional" v-for="additional in selectedItem.additionals">
+                                    <label class="modal_additional_title"><input type="checkbox">{{ additional.name }}</label>
+                                    <span class="modal_additional_price">+R${{ additional.price.toFixed(2) }}</span>
+                                </div>
+                            </div>
+                            <h4 class="modal_note_title">Observações</h4>
+                            <textarea placeholder="Sem cebola, sem pimenta, ponto da carne..." class="modal_note_input"></textarea>
+                        </div>
                     </div>
                 </div>
-                <div class="modal_body">
-                    <div class="modal_item">
-                        <h3 class="modal_item_title">{{ selectedItem.title }}</h3>
-                        <p class="modal_item_text">{{ selectedItem.text }}</p>
-                        <div class="modal_separator"></div>
-                        <div class="modal_item_cart">
-                            <p class="modal_item_price">R${{ selectedItem.price.toFixed(2) }}</p>
-                            <div class="item_quantity">
-                                <span class="item_quantity_minus" @click="selectedItem.quantity > 1 ? selectedItem.quantity-- : null">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item_quantity_minus_icon"><path d="M5 12h14"/></svg>
-                                </span>
-                                <span class="item_quantity_amount">{{ selectedItem.quantity }}</span>
-                                <span class="item_quantity_more" @click="selectedItem.quantity++">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item_quantity_more_icon"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-                                </span>
+            </div>
+            <div class="modal cart" v-if="openCart">
+                <div class="modal_overlay" @click="cartClose"></div>
+                <div class="modal_content">
+                    <div class="cart_heading">
+                        <h3 class="cart_heading_title">Seu carrinho</h3>
+                        <span class="cart_close" @click="cartClose"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart_close_icon"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>
+                    </div>
+                    <div class="cart_body">
+                        <div class="cart_empty" v-if="isCartEmpty">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart_empty_icon"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></svg>
+                            <h4 class="cart_empty_title">Seu carrinho está vazio</h4>
+                            <p class="cart_empty_text">Adicione itens para começar seu pedido</p>
+                        </div>
+                        <div class="cart_items" v-if="!isCartEmpty">
+                            <div class="cart_item" v-for="(item, i) in cart" :key="item.id">
+                                <div class="cart_item_body">
+                                    <img :src="item.preview" alt="Foto do prato" class="cart_item_preview">
+                                    <div class="cart_item_info">
+                                        <h4 class="cart_item_title">{{ item.title }}</h4>
+                                        <p class="cart_item_price">R${{ item.price }} / un.</p>
+                                    </div>
+                                    <span class="cart_item_remove" @click="removeItem(i)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart_item_remove_icon"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span>
+                                </div>
+                                <div class="cart_item_total">
+                                    <div class="total_quantity">
+                                        <span class="total_quantity_minus" @click="removeToItem(item)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="total_quantity_minus_icon"><path d="M5 12h14"/></svg>
+                                        </span>
+                                        <span class="total_quantity_amount">{{ item.quantity }}</span>
+                                        <span class="total_quantity_more" @click="addToItem(item)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="total_quantity_more_icon"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                                        </span>
+                                    </div>
+                                    <span class="total_price">R${{ item.total.toFixed(2) }}</span>
+                                </div>
                             </div>
-                            <button class="item_add_cart">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="item_add_cart_icon"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
-                                Adicionar ao carrinho
-                            </button>
                         </div>
                     </div>
-                    <div class="modal_information">
-                        <h4 class="modal_additionals_title">Adicionais</h4>
-                        <div class="modal_additionals">
-                            <div class="modal_additional" v-for="additional in selectedItem.additionals">
-                                <label class="modal_additional_title"><input type="checkbox" name="additional">{{ additional.name }}</label>
-                                <span class="modal_additional_price">+R${{ additional.price.toFixed(2) }}</span>
+                    <div class="cart_checkout" v-if="!isCartEmpty">
+                        <div class="cart_coupon_container">
+                            <div class="cart_coupon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cart_coupon_icon"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg>
+                                <input type="text" class="cart_coupon_input" placeholder="Cupom de desconto">
                             </div>
+                            <span class="cart_coupon_apply">Aplicar</span>
                         </div>
-                        <h4 class="modal_note_title">Observações</h4>
-                        <textarea placeholder="Sem cebola, sem pimenta, ponto da carne..." class="modal_note_input"></textarea>
+                        <div class="cart_checkout_description">
+                            <p class="cart_checkout_subtotal">Subtotal<span>R${{ cartTotal.toFixed(2) }}</span></p>
+                            <p class="cart_checkout_delivery">Taxa de entrega<span>R$5.00</span></p>
+                            <p class="cart_checkout_total">Total <span class="cart_checkout_total_price">R${{ cartTotal.toFixed(2) }}</span></p>
+                        </div>
+                        <button class="cart_checkout_finalize">Finalizar pedido</button>
                     </div>
                 </div>
             </div>

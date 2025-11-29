@@ -9,6 +9,7 @@
     --title-color: #262626;
     --text-color: #737373;
     --price-color: 46, 184, 46;
+    --remove-color: 239, 67, 67;
     --primary-color: 255, 91, 20;
     --shadow: 0 4px 16px rgba(0, 0, 0, .1);
 }

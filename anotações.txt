@@ -1,0 +1,6 @@
+FUNÇÕES
+
+QR code
+Pedir pelo app (não precisa pagar na hora) e o garçom retorna com o pedido
+Botão fechar a conta e chamar o garçom para cobra o pedido
+
